@@ -1,9 +1,9 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const getUserData = () => {
+const getUsersData = () => {
   return axios
-    .get("/user", { headers: authHeader() })
+    .get("/users", { headers: authHeader() })
     .then((response) => {
       console.log(response);
       return response.data;
@@ -12,5 +12,5 @@ const getUserData = () => {
 };
 
 export default {
-  getUserData,
+  getUsersData,
 };

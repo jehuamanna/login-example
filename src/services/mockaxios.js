@@ -3,7 +3,7 @@ import MockAdapter from "axios-mock-adapter";
 
 const mock = new MockAdapter(axios);
 
-mock.onGet("http://localhost:8081/users").reply(200, {
+mock.onGet("/users").reply(200, {
   users: [
     {
       id: 1,

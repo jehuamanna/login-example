@@ -7,7 +7,7 @@ export const login = (username, password) => (dispatch) => {
     (data) => {
       dispatch({
         type: LOGIN_SUCCESS,
-        payload: { user: data },
+        payload: { user: { accessToken: data.accessToken } },
       });
 
       return Promise.resolve();
@@ -37,7 +37,6 @@ export const login = (username, password) => (dispatch) => {
 
 export const logout = () => (dispatch) => {
   AuthService.logout();
-
   dispatch({
     type: LOGOUT,
   });

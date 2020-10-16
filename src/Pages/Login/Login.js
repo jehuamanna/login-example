@@ -1,61 +1,22 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 import validator from "validator";
-import BackgroundImage from "../../common/assets/images/background.jpg";
 import InputFloatingLabel from "../../common/components/Input/InputFloatingLabel";
-
+import { SET_MESSAGE, CLEAR_MESSAGE } from "../../actions/types";
 import { login } from "../../actions/auth";
+import constants from "../../common/constants/constants";
+import {
+  Body,
+  FormContainer,
+  Form,
+  SignInTitle,
+  InputBox,
+  Input,
+  MessageContainer,
+} from "./StyledComponents";
 
-const Body = styled.div`
-  background: url(${BackgroundImage});
-  background-size: cover;
-  background-repeat: no-repeat;
-
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -25%;
-    width: 50%;
-    height: 100%;
-    background: #03a9f4;
-    opacity: 0.8;
-  }
-`;
-
-const FormContainer = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 25%;
-  transform: translate(-50%, -50%);
-  width: 350px;
-  background: #fff;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
-  padding: 50px;
-`;
-const Form = styled.form``;
-const SignInTitle = styled.h2`
-  color: #777;
-  margin: 0 0 40px;
-  padding: 0px;
-`;
-const InputBox = styled.div`
-  position: relative;
-  margin: 20px 0px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  font-size: 16px;
-  height: 44px;
-  padding: 0px;
-  text-align: center;
-  background: #03a9f4;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-`;
+const { SIGN_IN } = constants;
 
 const Login = (props) => {
   const [email, setEmail] = useState("");
@@ -63,24 +24,43 @@ const Login = (props) => {
   const [isEmailError, setIsEmailError] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
 
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
+
   const dispatch = useDispatch();
 
   const handleEmailChange = (value) => {
     console.log(value);
     setEmail(value);
     setIsEmailError(false);
+    dispatch({
+      type: CLEAR_MESSAGE,
+    });
   };
   const handlePasswordChange = (value) => {
     setPassword(value);
     setIsPasswordError(false);
+    dispatch({
+      type: CLEAR_MESSAGE,
+    });
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+
     if (!validator.isEmail(email)) {
       setIsEmailError(true);
+      dispatch({
+        type: SET_MESSAGE,
+        payload: "Invalid Email",
+      });
       return;
     } else if (password === "") {
       setIsPasswordError(true);
+      dispatch({
+        type: SET_MESSAGE,
+        payload: "Password cannot be empty",
+      });
       return;
     }
     dispatch(login(email, password))
@@ -89,14 +69,17 @@ const Login = (props) => {
         window.location.reload();
       })
       .catch(() => {});
-    e.preventDefault();
   };
+
+  if (isLoggedIn) {
+    return <Redirect to="/dashboard" />;
+  }
 
   return (
     <Body>
       <FormContainer>
-        <Form onSubmit={handleSubmit}>
-          <SignInTitle>Sign In</SignInTitle>
+        <Form onSubmit={(e) => handleSubmit(e)}>
+          <SignInTitle>{SIGN_IN}</SignInTitle>
           <InputBox>
             <InputFloatingLabel
               label="Email"
@@ -130,6 +113,7 @@ const Login = (props) => {
             <Input type="submit" name="" value="Login"></Input>
           </InputBox>
         </Form>
+        <MessageContainer>{message}</MessageContainer>
       </FormContainer>
     </Body>
   );
