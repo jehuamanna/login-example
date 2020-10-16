@@ -112,7 +112,6 @@ const InputFloatingLabel = (props) => {
         <Input
           type={type}
           name=""
-          required=""
           onChange={(e) => onChange(e.target.value)}
           value={value}
           required={required}

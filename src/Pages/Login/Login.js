@@ -5,7 +5,7 @@ import validator from "validator";
 import InputFloatingLabel from "../../common/components/Input/InputFloatingLabel";
 import { SET_MESSAGE, CLEAR_MESSAGE } from "../../actions/types";
 import { login } from "../../actions/auth";
-import constants from "../../common/constants/constants";
+import stringConstants from "../../common/constants/stringConstants";
 import {
   Body,
   FormContainer,
@@ -15,8 +15,20 @@ import {
   Input,
   MessageContainer,
 } from "./StyledComponents";
+import routesContants from "../../common/constants/routesConstants";
 
-const { SIGN_IN } = constants;
+const {
+  SIGN_IN,
+  LOGIN,
+  EMAIL,
+  PASSWORD,
+  PASSWORD_CANNOT_BE_EMPTY,
+  EMAIL_ERROR_MESSAGE,
+  SUCCESS_BORDER_STYLE,
+  ERROR_BORDER_STYLE,
+} = stringConstants;
+
+const { DASHBOARD_ROUTE } = routesContants;
 
 const Login = (props) => {
   const [email, setEmail] = useState("");
@@ -52,27 +64,39 @@ const Login = (props) => {
       setIsEmailError(true);
       dispatch({
         type: SET_MESSAGE,
-        payload: "Invalid Email",
+        payload: EMAIL_ERROR_MESSAGE,
       });
       return;
     } else if (password === "") {
       setIsPasswordError(true);
       dispatch({
         type: SET_MESSAGE,
-        payload: "Password cannot be empty",
+        payload: PASSWORD_CANNOT_BE_EMPTY,
       });
       return;
     }
     dispatch(login(email, password))
       .then(() => {
-        props.history.push("/dashboard");
+        props.history.push(DASHBOARD_ROUTE);
         window.location.reload();
       })
       .catch(() => {});
   };
 
+  const overriddenStylesEmail = {
+    input: {
+      border: isEmailError ? SUCCESS_BORDER_STYLE : ERROR_BORDER_STYLE,
+    },
+  };
+
+  const overriddenStylesPassword = {
+    input: {
+      border: isPasswordError ? SUCCESS_BORDER_STYLE : ERROR_BORDER_STYLE,
+    },
+  };
+
   if (isLoggedIn) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to={DASHBOARD_ROUTE} />;
   }
 
   return (
@@ -82,35 +106,24 @@ const Login = (props) => {
           <SignInTitle>{SIGN_IN}</SignInTitle>
           <InputBox>
             <InputFloatingLabel
-              label="Email"
+              label={EMAIL}
               value={email}
-              overriddenStyles={{
-                input: {
-                  border: isEmailError
-                    ? "solid 1px #f0380a"
-                    : "solid 1px #7e91a5",
-                },
-              }}
+              type="text"
+              overriddenStyles={overriddenStylesEmail}
               onChange={(value) => handleEmailChange(value)}
             />
           </InputBox>
           <InputBox>
             <InputFloatingLabel
-              label="Password"
+              label={PASSWORD}
               value={password}
               type="password"
-              overriddenStyles={{
-                input: {
-                  border: isPasswordError
-                    ? "solid 1px #f0380a"
-                    : "solid 1px #7e91a5",
-                },
-              }}
+              overriddenStyles={overriddenStylesPassword}
               onChange={(value) => handlePasswordChange(value)}
             />
           </InputBox>
           <InputBox>
-            <Input type="submit" name="" value="Login"></Input>
+            <Input type="submit" name="" value={LOGIN}></Input>
           </InputBox>
         </Form>
         <MessageContainer>{message}</MessageContainer>
