@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import validator from "validator";
 import BackgroundImage from "../../common/assets/images/background.jpg";
 import InputFloatingLabel from "../../common/components/Input/InputFloatingLabel";
+
+import { login } from "../../actions/auth";
 
 const Body = styled.div`
   background: url(${BackgroundImage});
@@ -56,18 +60,55 @@ const Input = styled.input`
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isEmailError, setIsEmailError] = useState(false);
+  const [isPasswordError, setIsPasswordError] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleEmailChange = (value) => {
+    console.log(value);
+    setEmail(value);
+    setIsEmailError(false);
+  };
+  const handlePasswordChange = (value) => {
+    setPassword(value);
+    setIsPasswordError(false);
+  };
+
+  const handleSubmit = (e) => {
+    if (!validator.isEmail(email)) {
+      setIsEmailError(true);
+      return;
+    } else if (password === "") {
+      setIsPasswordError(true);
+      return;
+    }
+    dispatch(login(email, password))
+      .then(() => {
+        props.history.push("/dashboard");
+        window.location.reload();
+      })
+      .catch(() => {});
+    e.preventDefault();
+  };
 
   return (
     <Body>
       <FormContainer>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <SignInTitle>Sign In</SignInTitle>
           <InputBox>
             <InputFloatingLabel
               label="Email"
               value={email}
-              overriddenStyles={{}}
-              onChange={(value) => setEmail(value)}
+              overriddenStyles={{
+                input: {
+                  border: isEmailError
+                    ? "solid 1px #f0380a"
+                    : "solid 1px #7e91a5",
+                },
+              }}
+              onChange={(value) => handleEmailChange(value)}
             />
           </InputBox>
           <InputBox>
@@ -75,12 +116,18 @@ const Login = (props) => {
               label="Password"
               value={password}
               type="password"
-              overriddenStyles={{}}
-              onChange={(value) => setPassword(value)}
+              overriddenStyles={{
+                input: {
+                  border: isPasswordError
+                    ? "solid 1px #f0380a"
+                    : "solid 1px #7e91a5",
+                },
+              }}
+              onChange={(value) => handlePasswordChange(value)}
             />
           </InputBox>
           <InputBox>
-            <Input type="text" name="" value="Login"></Input>
+            <Input type="submit" name="" value="Login"></Input>
           </InputBox>
         </Form>
       </FormContainer>

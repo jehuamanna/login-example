@@ -1,7 +1,8 @@
 import React from "react";
+import styled from "styled-components";
 
 const Dashboard = (props) => {
-  return <h1> Dashboard</h1>;
+  return <ContentTable></ContentTable>;
 };
 
 export default Dashboard;
