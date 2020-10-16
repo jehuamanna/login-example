@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { logout } from "../../actions/auth";
@@ -10,22 +10,24 @@ import {
   ContentTable,
 } from "./StyledComponents";
 import routesContants from "../../common/constants/routesConstants";
+import { getUsersData } from "../../actions/usersData";
 
 const { LOGIN_ROUTE } = routesContants;
 
 const tableColumnNames = ["S.No", "Name", "Age", "Gender", "Email", "Phone No"];
 
 const Dashboard = (props) => {
-  const { users } = useSelector((state) => {
-    console.log(state);
-    return state.usersData;
-  });
+  const { users } = useSelector((state) => state.usersData);
   const { isLoggedIn } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  useEffect(() => {
+    dispatch(getUsersData());
+  }, [dispatch]);
 
   if (!isLoggedIn) {
     return <Redirect to={LOGIN_ROUTE} />;
