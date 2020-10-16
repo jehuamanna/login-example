@@ -11,6 +11,9 @@ import {
 } from "./StyledComponents";
 import routesContants from "../../common/constants/routesConstants";
 import { getUsersData } from "../../actions/usersData";
+import stringConstants from "../../common/constants/stringConstants";
+
+const { LOGOUT } = stringConstants;
 
 const { LOGIN_ROUTE } = routesContants;
 
@@ -36,7 +39,7 @@ const Dashboard = (props) => {
   return (
     <TableContainer>
       <Header>
-        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+        <LogoutButton onClick={handleLogout}>{LOGOUT}</LogoutButton>
       </Header>
       <TableWrapper>
         <ContentTable>

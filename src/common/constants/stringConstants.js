@@ -1,6 +1,7 @@
 const constants = {
   SIGN_IN: "Sign In",
   LOGIN: "Login",
+  LOGOUT: "Logout",
   EMAIL: "Email",
   PASSWORD: "Password",
   EMAIL_ERROR_MESSAGE: "Invalid Email",

@@ -101,7 +101,6 @@ Label.defaultProps = {
 
 const InputFloatingLabel = (props) => {
   const { label, value, type, required, onChange, overriddenStyles } = props;
-  console.log("overriddenStyles", overriddenStyles);
   return (
     <OuterContainer
       outerContainer={

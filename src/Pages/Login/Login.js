@@ -42,7 +42,6 @@ const Login = (props) => {
   const dispatch = useDispatch();
 
   const handleEmailChange = (value) => {
-    console.log(value);
     setEmail(value);
     setIsEmailError(false);
     dispatch({

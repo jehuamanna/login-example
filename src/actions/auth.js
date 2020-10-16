@@ -13,7 +13,6 @@ export const login = (username, password) => (dispatch) => {
       return Promise.resolve();
     },
     (error) => {
-      console.log("message,", error);
       const message =
         (error.response &&
           error.response.data &&
